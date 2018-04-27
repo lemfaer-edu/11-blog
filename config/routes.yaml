@@ -1,0 +1,48 @@
+blog_list:
+    path: /{month}
+    controller: App\Controller\BlogController::list
+    requirements:
+        month: '\d{4}-\d{2}'
+    defaults:
+        category: null
+        month: null
+        page: 1
+
+blog_list_pagination:
+    path: /{month}/page-{page}
+    controller: App\Controller\BlogController::list
+    requirements:
+        month: '\d{4}-\d{2}'
+        page: '[1-9]\d*'
+    defaults:
+        category: null
+
+blog_category:
+    path: /{category}/{month}
+    controller: App\Controller\BlogController::list
+    requirements:
+        category: '\w+'
+        month: '\d{4}-\d{2}'
+    defaults:
+        month: null
+        page: 1
+
+blog_category_pagination:
+    path: /{category}/{month}/page-{page}
+    controller: App\Controller\BlogController::list
+    requirements:
+        category: '\w+'
+        month: '\d{4}-\d{2}'
+        page: '[1-9]\d*'
+
+blog_tag:
+    path: /tag/{name}
+    controller: App\Controller\BlogController::tag
+    requirements:
+        tag: '\w+'
+
+blog_view:
+    path: /view/{id}
+    controller: App\Controller\BlogController::view
+    requirements:
+        id: '\d+'

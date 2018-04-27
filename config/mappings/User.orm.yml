@@ -1,0 +1,56 @@
+App\Entity\User:
+  type: entity
+  table: user
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    login:
+      type: string
+      length: 255
+      nullable: true
+      unique: true
+
+    email:
+      type: string
+      length: 255
+      nullable: true
+      unique: true
+
+    public:
+      type: string
+      length: 255
+      nullable: false
+      unique: true
+
+    password:
+      type: string
+      length: 255
+      nullable: false
+
+    data:
+      type: json
+      nullable: false
+
+    created:
+      type: datetime
+      nullable: false
+      columnDefinition: "DATETIME NOT NULL DEFAULT now()"
+
+    updated:
+      type: datetime
+      nullable: false
+      columnDefinition: "DATETIME NOT NULL DEFAULT now() ON UPDATE now()"
+
+  oneToMany:
+    articles:
+      targetEntity: App\Entity\Article
+      mappedBy: author
+
+    comments:
+      targetEntity: App\Entity\Comment
+      mappedBy: author

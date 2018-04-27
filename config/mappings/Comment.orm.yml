@@ -1,0 +1,41 @@
+App\Entity\Comment:
+  type: entity
+  table: comment
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    content:
+      type: text
+      nullable: false
+
+    created:
+      type: datetime
+      nullable: false
+      columnDefinition: "DATETIME NOT NULL DEFAULT now()"
+
+    updated:
+      type: datetime
+      nullable: false
+      columnDefinition: "DATETIME NOT NULL DEFAULT now() ON UPDATE now()"
+
+  manyToOne:
+    author:
+      targetEntity: App\Entity\User
+      inversedBy: comments
+      joinColumn:
+        name: author_id
+        nullable: false
+        referencedColumnName: id
+
+    article:
+      targetEntity: App\Entity\Article
+      inversedBy: comments
+      joinColumn:
+        name: article_id
+        nullable: false
+        referencedColumnName: id

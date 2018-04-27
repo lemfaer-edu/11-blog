@@ -1,0 +1,31 @@
+App\Entity\Tag:
+  type: entity
+  table: tag
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    name:
+      type: string
+      length: 255
+      nullable: false
+      unique: true
+
+    created:
+      type: datetime
+      nullable: false
+      columnDefinition: "DATETIME NOT NULL DEFAULT now()"
+
+    updated:
+      type: datetime
+      nullable: false
+      columnDefinition: "DATETIME NOT NULL DEFAULT now() ON UPDATE now()"
+
+  manyToMany:
+    articles:
+      targetEntity: App\Entity\Article
+      mappedBy: tags

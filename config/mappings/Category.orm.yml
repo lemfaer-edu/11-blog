@@ -1,0 +1,31 @@
+App\Entity\Category:
+  type: entity
+  table: category
+
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+
+  fields:
+    name:
+      type: string
+      length: 255
+      nullable: false
+      unique: true
+
+    created:
+      type: datetime
+      nullable: false
+      columnDefinition: "DATETIME NOT NULL DEFAULT now()"
+
+    updated:
+      type: datetime
+      nullable: false
+      columnDefinition: "DATETIME NOT NULL DEFAULT now() ON UPDATE now()"
+
+  oneToMany:
+    articles:
+      targetEntity: App\Entity\Article
+      mappedBy: category
