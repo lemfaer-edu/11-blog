@@ -1,3 +1,21 @@
+article_write:
+    path: /write/{id}
+    controller: App\Controller\ArticleController::write
+    methods: [GET]
+    requirements:
+        id: '\d+'
+    defaults:
+        id: null
+
+article_view_submit:
+    path: /write/{id}
+    controller: App\Controller\ArticleController::write_submit
+    methods: [POST]
+    requirements:
+        id: '\d+'
+    defaults:
+        id: null
+
 blog_list:
     path: /{month}
     controller: App\Controller\BlogController::list
@@ -35,14 +53,14 @@ blog_category_pagination:
         month: '\d{4}-\d{2}'
         page: '[1-9]\d*'
 
-blog_tag:
-    path: /tag/{name}
-    controller: App\Controller\BlogController::tag
-    requirements:
-        tag: '\w+'
+# tag_articles:
+#     path: /tag/{name}
+#     controller: App\Controller\TagController::tag
+#     requirements:
+#         tag: '\w+'
 
-blog_view:
-    path: /view/{id}
-    controller: App\Controller\BlogController::view
-    requirements:
-        id: '\d+'
+# article_view:
+#     path: /view/{id}
+#     controller: App\Controller\ArticleController::view
+#     requirements:
+#         id: '\d+'

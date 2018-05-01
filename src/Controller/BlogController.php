@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use DateTime;
 use App\Entity\Article;
-use Symfony\Component\HttpFoundation\Response;
+// use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityManagerInterface as EM;
 
@@ -16,7 +16,7 @@ class BlogController extends Controller {
 	 * @param string $month in format Y-m
 	 * @param int $page for pagination, >0
 	 */
-	function list(EM $em, $category, $month, $page) {
+	function list(EM $em, $category, $month, int $page) {
 		$repo = $em->getRepository(Article::class);
 
 		$query_builder = $repo
