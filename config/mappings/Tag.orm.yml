@@ -1,6 +1,7 @@
 App\Entity\Tag:
   type: entity
   table: tag
+  repositoryClass: App\Repository\TagRepository
 
   id:
     id:
@@ -17,12 +18,10 @@ App\Entity\Tag:
 
     created:
       type: datetime
-      nullable: false
       columnDefinition: "DATETIME NOT NULL DEFAULT now()"
 
     updated:
       type: datetime
-      nullable: false
       columnDefinition: "DATETIME NOT NULL DEFAULT now() ON UPDATE now()"
 
   manyToMany:
