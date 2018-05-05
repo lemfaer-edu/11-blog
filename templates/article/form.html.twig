@@ -44,7 +44,7 @@
 	<div class="d-flex justify-content-center">
 		<div class="col-10">
 			<h4>Article edition</h4>
-			<form action="{{ url("article_view_submit", { id : entity.id }) }}" method="POST">
+			<form action="{{ url("article_write_submit", { id : entity.id }) }}" method="POST">
 				<input type="hidden" name="csrf_token" value="{{ csrf_token("article-save") }}" />
 				<div class="form-group">
 					<input

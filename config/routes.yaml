@@ -1,3 +1,17 @@
+login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+    methods: [GET, POST]
+
+register:
+    path: /register
+    controller: App\Controller\SecurityController::register
+    methods: [GET]
+
+register_submit:
+    path: /register
+    controller: App\Controller\SecurityController::register_submit
+
 article_write:
     path: /write/{id}
     controller: App\Controller\ArticleController::write
@@ -7,7 +21,7 @@ article_write:
     defaults:
         id: null
 
-article_view_submit:
+article_write_submit:
     path: /write/{id}
     controller: App\Controller\ArticleController::write_submit
     methods: [POST]
@@ -17,40 +31,21 @@ article_view_submit:
         id: null
 
 blog_list:
-    path: /{month}
+    path: /{category}
     controller: App\Controller\BlogController::list
+    methods: [GET]
     requirements:
-        month: '\d{4}-\d{2}'
+        category: '\w+'
     defaults:
         category: null
-        month: null
         page: 1
 
 blog_list_pagination:
-    path: /{month}/page-{page}
+    path: /{category}/page-{page}
     controller: App\Controller\BlogController::list
-    requirements:
-        month: '\d{4}-\d{2}'
-        page: '[1-9]\d*'
-    defaults:
-        category: null
-
-blog_category:
-    path: /{category}/{month}
-    controller: App\Controller\BlogController::list
+    methods: [GET]
     requirements:
         category: '\w+'
-        month: '\d{4}-\d{2}'
-    defaults:
-        month: null
-        page: 1
-
-blog_category_pagination:
-    path: /{category}/{month}/page-{page}
-    controller: App\Controller\BlogController::list
-    requirements:
-        category: '\w+'
-        month: '\d{4}-\d{2}'
         page: '[1-9]\d*'
 
 # tag_articles:

@@ -27,6 +27,11 @@ App\Entity\User:
       nullable: false
       unique: true
 
+    roles:
+      type: simple_array
+      length: 255
+      nullable: false
+
     password:
       type: string
       length: 255
@@ -35,16 +40,6 @@ App\Entity\User:
     data:
       type: json
       nullable: false
-
-    created:
-      type: datetime
-      nullable: false
-      columnDefinition: "DATETIME NOT NULL DEFAULT now()"
-
-    updated:
-      type: datetime
-      nullable: false
-      columnDefinition: "DATETIME NOT NULL DEFAULT now() ON UPDATE now()"
 
   oneToMany:
     articles:

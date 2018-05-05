@@ -8,7 +8,5 @@ class Comment {
 	public $content;
 	public $article;
 	public $author;
-	public $created;
-	public $updated;
 
 }

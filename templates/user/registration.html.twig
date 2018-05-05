@@ -1,0 +1,73 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	Register a new account
+{% endblock %}
+
+{% block javascripts %}
+	<script nonce="{{ csp_nonce }}" defer>
+		function recaptcha_submit(token) {
+			jQuery("form").submit();
+		}
+
+		jQuery("form").on("submit", function (event) {
+			if (!grecaptcha.getResponse()) {
+				grecaptcha.execute();
+				event.preventDefault();
+			}
+		});
+	</script>
+	<script nonce="{{ csp_nonce }}" src="https://www.google.com/recaptcha/api.js?hl=en" async defer></script>
+{% endblock %}
+
+{% block content %}
+	<div class="d-flex justify-content-center">
+		<div class="col-10">
+			<h4>Registration form</h4>
+			<form action="{{ url("register_submit") }}" method="POST">
+				<div class="form-group">
+					<input
+						type="text"
+						id="user-login"
+						class="form-control"
+						name="login"
+						placeholder="Login / Public"
+						pattern="{{ login }}"
+						required
+						/>
+				</div>
+				<div class="form-group">
+					<input
+						type="email"
+						id="user-email"
+						class="form-control"
+						name="email"
+						placeholder="Email"
+						required
+						/>
+				</div>
+				<div class="form-group">
+					<input
+						type="password"
+						id="user-password"
+						class="form-control"
+						name="password"
+						placeholder="Password"
+						pattern="{{ password }}"
+						required
+						/>
+				</div>
+				<div class="g-recaptcha"
+					data-sitekey="6LfAcFcUAAAAAM2HzjvlMMF6JGq1ScFosWMVnt_s"
+					data-callback="recaptcha_submit"
+					data-size="invisible">
+				</div>
+				<div class="form-group row">
+					<div class="col-sm-12 col-xs-12">
+						<button type="submit" class="btn btn-dark rounded-0">Submit</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

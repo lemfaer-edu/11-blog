@@ -40,10 +40,9 @@ class ArticleController extends Controller {
 		$tag_repo = $em->getRepository(Tag::class);
 		$tags = $tag_repo->add_tags($request->get("tags"));
 
-		dump($tags);
-
 		// $entity = $id ? $em->find(Article::class, $id) : new Article;
-		// $entity->
+		// $entity->category = $em->find(Category::class, $request->get("category"));
+		// $entity->user = 
 	}
 
 }

@@ -2,6 +2,9 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: 'en'
+    login: '^[a-z_0-9]{3,20}$'
+    password: '^(.|\s){6,20}$'
+    captcha_secret: '%env(CAPTCHA_SECRET)%'
     # csp_nonce: generated in services.php
 
 services:

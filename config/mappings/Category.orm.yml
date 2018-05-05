@@ -15,16 +15,6 @@ App\Entity\Category:
       nullable: false
       unique: true
 
-    created:
-      type: datetime
-      nullable: false
-      columnDefinition: "DATETIME NOT NULL DEFAULT now()"
-
-    updated:
-      type: datetime
-      nullable: false
-      columnDefinition: "DATETIME NOT NULL DEFAULT now() ON UPDATE now()"
-
   oneToMany:
     articles:
       targetEntity: App\Entity\Article

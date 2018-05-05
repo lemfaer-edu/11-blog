@@ -16,14 +16,6 @@ App\Entity\Tag:
       nullable: false
       unique: true
 
-    created:
-      type: datetime
-      columnDefinition: "DATETIME NOT NULL DEFAULT now()"
-
-    updated:
-      type: datetime
-      columnDefinition: "DATETIME NOT NULL DEFAULT now() ON UPDATE now()"
-
   manyToMany:
     articles:
       targetEntity: App\Entity\Article

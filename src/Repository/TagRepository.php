@@ -18,9 +18,13 @@ class TagRepository extends ServiceEntityRepository {
 	 * @return array
 	 */
 	function tags($tag_string) {
-		$tag_string = preg_replace("/((?![\w,]).)+/", "", $tag_string);
+		$regex = "/((?![\w,-_\040]).)+/";
+		$tag_string = preg_replace($regex, "", $tag_string);
 		$tag_string = mb_strtolower($tag_string);
-		return explode(",", $tag_string);
+		$tags = explode(",", $tag_string);
+		$tags = array_map("trim", $tags);
+		$tags = array_unique($tags);
+		return $tags;
 	}
 
 	/**
@@ -36,8 +40,10 @@ class TagRepository extends ServiceEntityRepository {
 
 		if (count($entities) < $limit) {
 			$exists = array_column($entities, "name");
+			$left = $limit - count($exists);
 			$nexists = array_diff($tags, $exists);
-			$nexists = array_slice($nexists, count($exists), $limit);
+			$nexists = array_values($nexists);
+			$nexists = array_slice($nexists, 0, $left);
 
 			foreach ($nexists as $name) {
 				$entity = new Tag;

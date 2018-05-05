@@ -13,16 +13,6 @@ App\Entity\Comment:
       type: text
       nullable: false
 
-    created:
-      type: datetime
-      nullable: false
-      columnDefinition: "DATETIME NOT NULL DEFAULT now()"
-
-    updated:
-      type: datetime
-      nullable: false
-      columnDefinition: "DATETIME NOT NULL DEFAULT now() ON UPDATE now()"
-
   manyToOne:
     author:
       targetEntity: App\Entity\User

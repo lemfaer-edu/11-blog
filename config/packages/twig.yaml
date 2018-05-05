@@ -4,3 +4,5 @@ twig:
     strict_variables: '%kernel.debug%'
     globals:
       csp_nonce: '%csp_nonce%'
+      password: '%password%'
+      login: '%login%'

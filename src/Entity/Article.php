@@ -11,7 +11,5 @@ class Article {
 	public $author;
 	public $comments;
 	public $tags;
-	public $created;
-	public $updated;
 
 }

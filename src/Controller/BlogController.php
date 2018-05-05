@@ -13,10 +13,9 @@ class BlogController extends Controller {
 	/**
 	 * Renders articles list page
 	 * @param string $category name
-	 * @param string $month in format Y-m
 	 * @param int $page for pagination, >0
 	 */
-	function list(EM $em, $category, $month, int $page) {
+	function list(EM $em, $category, int $page) {
 		$repo = $em->getRepository(Article::class);
 
 		$query_builder = $repo
@@ -30,28 +29,30 @@ class BlogController extends Controller {
 				->setParameter("category", $category);
 		}
 
-		if ($month) {
-			$start = DateTime::createFromFormat("Y-m|", $month);
-			$end = (clone $start)->modify("next month");
+		// if ($month) {
+		// 	$start = DateTime::createFromFormat("Y-m|", $month);
+		// 	$end = (clone $start)->modify("next month");
 
-			$query_builder
-				->andWhere("a.updated >= :start")
-				->andWhere("a.updated <= :end")
-				->setParameter("start", $start)
-				->setParameter("end", $end);
-		}
+		// 	$query_builder
+		// 		->andWhere("a.updated >= :start")
+		// 		->andWhere("a.updated <= :end")
+		// 		->setParameter("start", $start)
+		// 		->setParameter("end", $end);
+		// }
 
 		$limit = 5;
 		$offset = ($page-1) * $limit;
 
 		$query_builder
-			->orderBy("a.updated", "desc")
+			->orderBy("a.id", "desc")
 			->setFirstResult($offset)
 			->setMaxResults($limit);
 
 		$result = $query_builder
 			->getQuery()
 			->getResult();
+
+		dump($this->getUser());
 
 		// return new Response("<body>" . count($result[0]->comments) . "</body>");
 	}
