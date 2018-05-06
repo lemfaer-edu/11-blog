@@ -61,11 +61,11 @@ comment_write_submit:
     requirements:
         article: '\d+'
 
-tag_articles:
-    path: /tag/{name}
-    controller: App\Controller\TagController::tag
-    requirements:
-        tag: '\w+'
+# tag_articles:
+#     path: /tag/{name}
+#     controller: App\Controller\TagController::tag
+#     requirements:
+#         tag: '\w+'
 
 blog_list:
     path: /{category}
@@ -78,6 +78,15 @@ blog_list:
         page: 1
 
 blog_list_pagination:
+    path: /page-{page}
+    controller: App\Controller\BlogController::list
+    methods: [GET]
+    requirements:
+        page: '[1-9]\d*'
+    defaults:
+        category: null
+
+blog_list_pagination_2:
     path: /{category}/page-{page}
     controller: App\Controller\BlogController::list
     methods: [GET]

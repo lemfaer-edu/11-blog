@@ -1,63 +1,83 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-	Main page
+	{% if category %}
+		{{ category | capitalize }}
+		articles
+	{% else %}
+		Main page
+	{% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bricklayer/0.4.2/bricklayer.min.css">
 {% endblock %}
 
 {% block javascripts %}
-	<script nonce="{{ csp_nonce }}" src="https://cdnjs.cloudflare.com/ajax/libs/bricks.js/1.8.0/bricks.min.js"></script>
+	<script nonce="{{ csp_nonce }}" src="//cdnjs.cloudflare.com/ajax/libs/bricklayer/0.4.2/bricklayer.min.js"></script>
+	<script nonce="{{ csp_nonce }}">var bricklayer = new Bricklayer(document.querySelector(".bricklayer"))</script>
 {% endblock %}
 
 {% block content %}
 	<div class="blog_posts stander_blog one_colo_stander_blog">
 		<div class="row">
-			{% for entity in entities %}
-				<article data-id="">
-					<div class="post_img">
-						<img src="{{ img[entity.id] }}">
-					</div>
-					<h5 class="post_title">
-						<a href="{{ url("article_view", { id: entity.id }) }}">
-							{{ entity.title }}
-						</a>
-					</h5>
-					<div class="post_meta_top">
-						<span class="post_meta_category">
-							<a href="{{ url("blog_list", { category: entity.category.name }) }}">
-								{{ entity.category.name }}
+			<div class="bricklayer">
+				{% for entity in entities %}
+					<article data-id="{{ entity.id }}">
+						<div class="post_img">
+							<img src="{{ img[entity.id] }}">
+						</div>
+						<h5 class="post_title">
+							<a href="{{ url("article_view", { id: entity.id }) }}">
+								<span>{{ entity.title }}</span>
 							</a>
-						</span>
-						<span class="post_meta_author">
-							{{ entity.author.public }}
-						</span>
-					</div>
-					<div class="post_content">
-						<p>{{ desc[entity.id] }}</p>
-					</div>
-				</article>
-			{% endfor %}
+						</h5>
+						<div class="post_meta_top">
+							<span class="post_meta_category">
+								<a href="{{ url("blog_list", { category: entity.category.name }) }}">
+									{{ entity.category.name }}
+								</a>
+							</span>
+							<span class="post_meta_author">
+								{{ entity.author.public }}
+							</span>
+						</div>
+						<div class="post_content">
+							<p>{{ desc[entity.id] }}</p>
+						</div>
+					</article>
+				{% endfor %}
+			</div>
 		</div>
 	</div>
-	<nav class="pagination_holder">
-		<ul class="pagination circle-pagination mb-80px">
 
-			<li class="page-item active">
-				<a class="page-link" href="https://www.energeticthemes.com/templates/umda/home-19.html#">1</a>
-			</li>
-			<li class="page-item">
-				<a class="page-link" href="https://www.energeticthemes.com/templates/umda/home-19.html#">2</a>
-			</li>
-			<li class="page-item">
-				<a class="page-link" href="https://www.energeticthemes.com/templates/umda/home-19.html#">3</a>
-			</li>
-			<li class="page-item">
-				<a class="page-link" href="https://www.energeticthemes.com/templates/umda/home-19.html#" aria-label="Next">
-					<span>
-						&gt;
-					</span>
-					<span class="sr-only">Next</span>
-				</a>
-			</li>
-		</ul>
-	</nav>
+	{% if pcount > 1 %}
+		<nav class="pagination_holder">
+			<ul class="pagination circle-pagination mb-80px">
+				{% set route = category ? "blog_list_pagination_2" : "blog_list_pagination" %}
+				{% set start = (page - pcount / 2) %}
+				{% set start = (start > 0 ? start : 1) | round %}
+				{% set end = (start + pcount - 1) | round %}
+
+				{% for i in range(start, end) %}
+					<li class="page-item {{ page == i ? "active" : "" }}">
+						<a class="page-link" href="{{ url(route,
+								{ category: category, page: i }) }}">
+							{{ i }}
+						</a>
+					</li>
+				{% endfor %}
+
+				{% if end > page %}
+					<li class="page-item">
+						<a class="page-link" href="{{ url(route,
+								{ category: category, page: page + 1 }) }}">
+							<span>&gt;</span>
+							<span class="sr-only">Next</span>
+						</a>
+					</li>
+				{% endif %}
+			</ul>
+		</nav>
+	{% endif %}
 {% endblock %}

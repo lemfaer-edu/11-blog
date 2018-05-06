@@ -22,9 +22,29 @@
 						</button>
 						<div class="collapse navbar-collapse" id="navbarNavDropdown">
 							<ul class="navbar-nav ml-auto">
-								<li class="nav-item">
-									<a href="https://www.energeticthemes.com/templates/umda/blog-single-post.html#" class="nav-link">Pages</a>
-								</li>
+								{% if not is_granted("IS_AUTHENTICATED_FULLY") %}
+									<li class="nav-item">
+										<a href="{{ url("register") }}" class="nav-link">
+											Regiser
+										</a>
+									</li>
+									<li class="nav-item">
+										<a href="{{ url("login") }}" class="nav-link">
+											Login
+										</a>
+									</li>
+								{% else %}
+									<li class="nav-item">
+										<a href="{{ url("article_write") }}" class="nav-link">
+											Write
+										</a>
+									</li>
+									<li class="nav-item capitalized">
+										<i class="nav-link">
+											{{ app.user.public }}
+										</i>
+									</li>
+								{% endif %}
 							</ul>
 						</div>
 					</div>

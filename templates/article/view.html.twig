@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-	{{ entity.title | capitalize }}
+	{{ entity.title }}
 {% endblock %}
 
 {% block stylesheets %}
@@ -20,9 +20,12 @@
 			<div class="blog_posts stander_blog_single_post">
 				<article>
 					<h3 class="post_title">
-						<a href="{{ url("article_view", { id: entity.id }) }}">
-							{{ entity.title }}
-						</a>
+						<span>{{ entity.title }}</span>
+						{% if app.user.id == entity.author.id %}
+							<a href="{{ url("article_write", { id: entity.id }) }}">
+								(<i>edit</i>)
+							</a>
+						{% endif %}
 					</h3>
 					<div class="post_meta_top">
 						<span class="post_meta_category">
@@ -30,7 +33,9 @@
 								{{ entity.category.name }}
 							</a>
 						</span>
-						<span class="post_meta_author">by {{ entity.author.public }}</span>
+						<span class="post_meta_author">
+							by {{ entity.author.public }}
+						</span>
 					</div>
 					<div class="post_content ql-editor">
 						{{ entity.content | raw }}
@@ -41,7 +46,7 @@
 								<ul class="blog-post-tags">
 									{% for tag in entity.tags %}
 										<li>
-											<a href="{{ url("tag_articles", { name: tag.name }) }}" rel="tag">
+											<a rel="tag">
 												{{ tag.name }}
 											</a>
 										</li>

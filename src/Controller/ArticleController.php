@@ -80,7 +80,7 @@ class ArticleController extends Controller {
 		$em->persist($entity);
 		$em->flush();
 
-		return $this->redirectToRoute("blog_list");
+		return $this->redirectToRoute("article_view", [ "id" => $entity->id ]);
 	}
 
 }
