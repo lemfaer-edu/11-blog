@@ -12,6 +12,12 @@ register_submit:
     path: /register
     controller: App\Controller\SecurityController::register_submit
 
+article_view:
+    path: /view/{id}
+    controller: App\Controller\ArticleController::view
+    requirements:
+        id: '\d+'
+
 article_write:
     path: /write/{id}
     controller: App\Controller\ArticleController::write
@@ -30,6 +36,19 @@ article_write_submit:
     defaults:
         id: null
 
+comment_write_submit:
+    path: /comment/{article}
+    controller: App\Controller\CommentController::write_submit
+    methods: [POST]
+    requirements:
+        article: '\d+'
+
+tag_articles:
+    path: /tag/{name}
+    controller: App\Controller\TagController::tag
+    requirements:
+        tag: '\w+'
+
 blog_list:
     path: /{category}
     controller: App\Controller\BlogController::list
@@ -47,15 +66,3 @@ blog_list_pagination:
     requirements:
         category: '\w+'
         page: '[1-9]\d*'
-
-# tag_articles:
-#     path: /tag/{name}
-#     controller: App\Controller\TagController::tag
-#     requirements:
-#         tag: '\w+'
-
-# article_view:
-#     path: /view/{id}
-#     controller: App\Controller\ArticleController::view
-#     requirements:
-#         id: '\d+'

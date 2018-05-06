@@ -13,7 +13,9 @@ class ArticleController extends Controller {
 	 * Renders article content by id
 	 * @param int $id article id
 	 */
-	function view(int $id) {
+	function view(EM $em, int $id) {
+		$entity = $em->find(Article::class, $id);
+		return $this->render("article/view.html.twig", compact("entity"));
 	}
 
 	/**
@@ -21,11 +23,16 @@ class ArticleController extends Controller {
 	 * @param int|null $id article id to edit
 	 */
 	function write(EM $em, int $id = null) {
+		$entity = $id ? $em->find(Article::class, $id) : new Article;
+
 		if (false === $this->isGranted("IS_AUTHENTICATED_FULLY")) {
 			return $this->redirectToRoute("blog_list");
 		}
 
-		$entity = $id ? $em->find(Article::class, $id) : new Article;
+		if ($id && $this->getUser()->id !== $entity->author->id) {
+			return $this->redirectToRoute("blog_list");
+		}
+
 		$categories = $em->getRepository(Category::class)->findAll();
 		$tags = $entity->tags ? $entity->tags->getValues() : [];
 		$tags = $em->getRepository(Tag::class)->tag_string($tags);
@@ -46,6 +53,7 @@ class ArticleController extends Controller {
 		$csrf_id = "article-save";
 		$csrf_token = $request->get("csrf_token");
 		$csrf_valid = $this->isCsrfTokenValid($csrf_id, $csrf_token);
+		$entity = $id ? $em->find(Article::class, $id) : new Article;
 
 		if (!$csrf_valid) {
 			$this->redirectToRoute("blog_list");
@@ -55,10 +63,13 @@ class ArticleController extends Controller {
 			return $this->redirectToRoute("blog_list");
 		}
 
+		if ($id && $this->getUser()->id !== $entity->author->id) {
+			return $this->redirectToRoute("blog_list");
+		}
+
 		$tag_repo = $em->getRepository(Tag::class);
 		$tags = $tag_repo->add_tags($request->get("tags"));
 
-		$entity = $id ? $em->find(Article::class, $id) : new Article;
 		$entity->category = $em->find(Category::class, $request->get("category"));
 		$entity->content = $request->get("content");
 		$entity->title = $request->get("title");

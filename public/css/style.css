@@ -1,3 +1,22 @@
 .ql-container, .ql-toolbar {
 	border-color: #eceae6 !important;
 }
+
+.post_meta_top, .post_title, .comment-meta cite {
+	text-transform: capitalize;
+}
+
+.stander_blog_single_post .post_content {
+	padding: 0;
+	white-space: inherit;
+}
+
+.comments-area .comment-list li article .comment-content {
+	margin-left: 0;
+}
+
+textarea.comment-area {
+	resize: vertical;
+	min-height: 12rem;
+	max-height: 32rem;
+}

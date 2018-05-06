@@ -1,0 +1,120 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	{{ entity.title | capitalize }}
+{% endblock %}
+
+{% block stylesheets %}
+	<link href="//cdn.quilljs.com/1.3.6/quill.core.css" rel="stylesheet">
+{% endblock %}
+
+{% block javascripts %}
+	<script nonce="{{ csp_nonce }}" defer>
+		video_width("iframe.ql-video", ".ql-editor", .8);
+	</script>
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-lg-10 offset-lg-1 mt-10px">
+			<div class="blog_posts stander_blog_single_post">
+				<article>
+					<h3 class="post_title">
+						<a href="{{ url("article_view", { id: entity.id }) }}">
+							{{ entity.title }}
+						</a>
+					</h3>
+					<div class="post_meta_top">
+						<span class="post_meta_category">
+							<a href="{{ url("blog_list", { category: entity.category.name }) }}">
+								{{ entity.category.name }}
+							</a>
+						</span>
+						<span class="post_meta_author">by {{ entity.author.public }}</span>
+					</div>
+					<div class="post_content ql-editor">
+						{{ entity.content | raw }}
+					</div>
+					<div class="post_meta_bottom my-30px">
+						<div class="row align-items-center">
+							<div class="col-lg-6 text-center text-lg-left mb-10px mb-lg-0">
+								<ul class="blog-post-tags">
+									{% for tag in entity.tags %}
+										<li>
+											<a href="{{ url("tag_articles", { name: tag.name }) }}" rel="tag">
+												{{ tag.name }}
+											</a>
+										</li>
+									{% endfor %}
+								</ul>
+							</div>
+							<div class="col-lg-6 text-center text-lg-right">
+								<a 
+									class="post_read_more_btn mr-2"
+									href="{{ url("article_view", { id: entity.id - 1 }) }}">
+										Previous Post
+								</a>
+								<a
+									class="post_read_more_btn ml-2"
+									href="{{ url("article_view", { id: entity.id + 1 }) }}">
+										Next Post
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="separator-line"></div>
+				</article>
+				<div class="blog-post-comments">
+					{% if entity.comments.count() %}
+						<div class="comments-area">
+							<h5 class="comment-title">
+								{{ entity.comments.count() }}
+								thought on
+								“{{ entity.title | capitalize }}”
+							</h5>
+							<ol class="comment-list">
+								{% for comment in entity.comments %}
+									<li class="comment">
+										<article class="comment-body">
+											<header class="comment-meta">
+												<cite>{{ comment.author.public }}</cite>
+											</header>
+											<section class="comment-content comment">
+												<p>{{ comment.content }}</p>
+											</section>
+										</article>
+									</li>
+								{% endfor %}
+							</ol>
+						</div>
+					{% endif %}
+
+					{% if is_granted("IS_AUTHENTICATED_FULLY") %}
+						<h5 class="comment-reply-title mb-4">Leave a comment</h5>
+						<form
+							class="form-fields-bg-transparent"
+							action="{{ url("comment_write_submit", { article: entity.id }) }}"
+							method="POST">
+
+							<div class="form-row  mb-15px">
+								<div class="form-group col-md-12">
+									<textarea
+										rows="8"
+										name="content"
+										class="form-control validate-required comment-area"
+										placeholder="Your Comment"
+										required></textarea>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-12 col-xs-12">
+									<button type="submit" class="btn btn-dark rounded-0">Submit</button>
+								</div>
+							</div>
+						</form>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
