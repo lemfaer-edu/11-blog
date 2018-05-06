@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\{ Article, Category, Tag };
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityManagerInterface as EM;
 
@@ -16,6 +17,10 @@ class ArticleController extends Controller {
 	 */
 	function view(EM $em, int $id) {
 		$entity = $em->find(Article::class, $id);
+		if (is_null($entity)) {
+			throw new NotFoundHttpException("Article not found");
+		}
+
 		return $this->render("article/view.html.twig", compact("entity"));
 	}
 
@@ -28,6 +33,10 @@ class ArticleController extends Controller {
 
 		if (false === $this->isGranted("IS_AUTHENTICATED_FULLY")) {
 			throw new AccessDeniedException("Not authenticated");
+		}
+
+		if (is_null($entity)) {
+			throw new NotFoundHttpException("Article not found");
 		}
 
 		if ($id && $this->getUser()->id !== $entity->author->id) {
@@ -62,6 +71,10 @@ class ArticleController extends Controller {
 
 		if (false === $this->isGranted("IS_AUTHENTICATED_FULLY")) {
 			throw new AccessDeniedException("Not authenticated");
+		}
+
+		if (is_null($entity)) {
+			throw new NotFoundHttpException("Article not found");
 		}
 
 		if ($id && $this->getUser()->id !== $entity->author->id) {
