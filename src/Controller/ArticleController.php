@@ -56,7 +56,7 @@ class ArticleController extends Controller {
 		$entity = $id ? $em->find(Article::class, $id) : new Article;
 
 		if (!$csrf_valid) {
-			$this->redirectToRoute("blog_list");
+			return $this->redirectToRoute("blog_list");
 		}
 
 		if (false === $this->isGranted("IS_AUTHENTICATED_FULLY")) {

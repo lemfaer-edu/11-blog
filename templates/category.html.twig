@@ -1,0 +1,37 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	{% if not entity.id %}
+		Create category
+	{% else %}
+		Update category #{{ entity.id }}
+	{% endif %}
+{% endblock %}
+
+{% block content %}
+	<div class="d-flex justify-content-center">
+		<div class="col-10">
+			<h4>Category form</h4>
+			<form action="{{ url("category_create_submit", { id: entity.id }) }}" method="POST">
+				<input type="hidden" name="csrf_token" value="{{ csrf_token("category-save") }}" />
+				<div class="form-group">
+					<input
+						type="text"
+						id="category-name"
+						class="form-control"
+						value="{{ entity.name }}"
+						placeholder="Name"
+						pattern="\w+"
+						name="name"
+						required
+						/>
+				</div>
+				<div class="form-group row">
+					<div class="col-sm-12 col-xs-12">
+						<button type="submit" class="btn btn-dark rounded-0">Submit</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

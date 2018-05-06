@@ -36,6 +36,24 @@ article_write_submit:
     defaults:
         id: null
 
+category_create:
+    path: /category/{id}
+    controller: App\Controller\CategoryController::save
+    methods: [GET]
+    requirements:
+        id: '\d+'
+    defaults:
+        id: null
+
+category_create_submit:
+    path: /category/{id}
+    controller: App\Controller\CategoryController::save_submit
+    methods: [POST]
+    requirements:
+        id: '\d+'
+    defaults:
+        id: null
+
 comment_write_submit:
     path: /comment/{article}
     controller: App\Controller\CommentController::write_submit

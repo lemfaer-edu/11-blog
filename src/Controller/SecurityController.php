@@ -42,7 +42,7 @@ class SecurityController extends Controller {
 		$captcha_valid = $captcha_response["success"];
 
 		if (!$captcha_valid) {
-			$this->redirectToRoute("blog_list");
+			return $this->redirectToRoute("blog_list");
 		}
 
 		$user = new User;
