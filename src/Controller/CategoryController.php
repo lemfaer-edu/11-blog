@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Category;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityManagerInterface as EM;
 
@@ -15,7 +16,7 @@ class CategoryController extends Controller {
 	 */
 	function save(EM $em, int $id = null) {
 		if (false === $this->isGranted("ROLE_ADMIN")) {
-			return $this->redirectToRoute("blog_list");
+			throw new AccessDeniedException("Not allowed");
 		}
 
 		$entity = $id ? $em->find(Category::class, $id) : new Category;
@@ -32,11 +33,11 @@ class CategoryController extends Controller {
 		$csrf_valid = $this->isCsrfTokenValid($csrf_id, $csrf_token);
 
 		if (!$csrf_valid) {
-			return $this->redirectToRoute("blog_list");
+			throw new AccessDeniedException("Wrong csrf token");
 		}
 
 		if (false === $this->isGranted("ROLE_ADMIN")) {
-			return $this->redirectToRoute("blog_list");
+			throw new AccessDeniedException("Not allowed");
 		}
 
 		$entity = $id ? $em->find(Category::class, $id) : new Category;

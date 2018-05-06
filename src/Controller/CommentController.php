@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\{ Article, Comment };
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityManagerInterface as EM;
 
@@ -19,11 +20,11 @@ class CommentController extends Controller {
 		$csrf_valid = $this->isCsrfTokenValid($csrf_id, $csrf_token);
 
 		if (!$csrf_valid) {
-			return $this->redirectToRoute("article_view", [ "id" => $article ]);
+			throw new AccessDeniedException("Wrong csrf token");
 		}
 
 		if (false === $this->isGranted("IS_AUTHENTICATED_FULLY")) {
-			return $this->redirectToRoute("article_view", [ "id" => $article ]);
+			throw new AccessDeniedException("Not authenticated");
 		}
 
 		$comment = new Comment;

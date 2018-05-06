@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\{ Article, Category, Tag };
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityManagerInterface as EM;
 
@@ -26,11 +27,11 @@ class ArticleController extends Controller {
 		$entity = $id ? $em->find(Article::class, $id) : new Article;
 
 		if (false === $this->isGranted("IS_AUTHENTICATED_FULLY")) {
-			return $this->redirectToRoute("blog_list");
+			throw new AccessDeniedException("Not authenticated");
 		}
 
 		if ($id && $this->getUser()->id !== $entity->author->id) {
-			return $this->redirectToRoute("blog_list");
+			throw new AccessDeniedException("Not allowed");
 		}
 
 		$categories = $em->getRepository(Category::class)->findAll();
@@ -56,15 +57,15 @@ class ArticleController extends Controller {
 		$entity = $id ? $em->find(Article::class, $id) : new Article;
 
 		if (!$csrf_valid) {
-			return $this->redirectToRoute("blog_list");
+			throw new AccessDeniedException("Wrong csrf token");
 		}
 
 		if (false === $this->isGranted("IS_AUTHENTICATED_FULLY")) {
-			return $this->redirectToRoute("blog_list");
+			throw new AccessDeniedException("Not authenticated");
 		}
 
 		if ($id && $this->getUser()->id !== $entity->author->id) {
-			return $this->redirectToRoute("blog_list");
+			throw new AccessDeniedException("Not allowed");
 		}
 
 		$tag_repo = $em->getRepository(Tag::class);

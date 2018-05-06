@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Doctrine\ORM\EntityManagerInterface as EM;
 
 class SecurityController extends Controller {
@@ -42,7 +43,7 @@ class SecurityController extends Controller {
 		$captcha_valid = $captcha_response["success"];
 
 		if (!$captcha_valid) {
-			return $this->redirectToRoute("blog_list");
+			throw new AccessDeniedException("Invalid captcha response");
 		}
 
 		$user = new User;
