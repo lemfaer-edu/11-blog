@@ -28,6 +28,17 @@ class TagRepository extends ServiceEntityRepository {
 	}
 
 	/**
+	 * Creates tag string from tag objects
+	 * @param Tag[] $tag_objects array of tag entities
+	 * @return string
+	 */
+	function tag_string($tag_objects) {
+		$tag_names = array_column($tag_objects ?: [], "name");
+		$tag_string = implode(", ", $tag_names);
+		return $tag_string;
+	}
+
+	/**
 	 * Creates tags in db if they not exists
 	 * @param string $tag_string string of tags, separated by `,`
 	 * @param int $limit limit of tags to add/return as result

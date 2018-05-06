@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Doctrine\ORM\EntityManagerInterface as EM;
 
@@ -14,8 +13,8 @@ class SecurityController extends Controller {
 	/**
 	 * Renders login form
 	 */
-	function login(AuthorizationCheckerInterface $check) {
-		if (true === $check->isGranted("IS_AUTHENTICATED_FULLY")) {
+	function login() {
+		if (true === $this->isGranted("IS_AUTHENTICATED_FULLY")) {
 			return $this->redirectToRoute("blog_list");
 		}
 
@@ -25,8 +24,8 @@ class SecurityController extends Controller {
 	/**
 	 * Renders registration form
 	 */
-	function register(AuthorizationCheckerInterface $check) {
-		if (true === $check->isGranted("IS_AUTHENTICATED_FULLY")) {
+	function register() {
+		if (true === $this->isGranted("IS_AUTHENTICATED_FULLY")) {
 			return $this->redirectToRoute("blog_list");
 		}
 

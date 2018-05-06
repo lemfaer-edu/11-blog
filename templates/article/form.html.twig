@@ -66,14 +66,16 @@
 						size>
 							<option disabled selected hidden>Category</option>
 							{% for category in categories %}
-								<option value="{{ category.id }}">
-									{{ category.name }}
+								<option
+									value="{{ category.id }}"
+									{{ entity.category and entity.category.id == category.id ? "selected" : "" }}>
+										{{ category.name }}
 								</option>
 							{% endfor %}
 					</select>
 				</div>
 				<div class="form-group">
-					<div id="article-editor"></div>
+					<div id="article-editor">{{ entity.content | raw }}</div>
 					<input id="article-content" type="hidden" name="content">
 				</div>
 				<div class="form-group">
@@ -82,7 +84,7 @@
 						id="article-tags"
 						class="form-control"
 						name="tags"
-						value="{{ entity.tags }}"
+						value="{{ tags }}"
 						placeholder="Tags separated by comma"
 						required
 						/>

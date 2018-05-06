@@ -10,13 +10,27 @@ use Doctrine\ORM\EntityManagerInterface as EM;
 class ArticleController extends Controller {
 
 	/**
+	 * Renders article content by id
+	 * @param int $id article id
+	 */
+	function view(int $id) {
+	}
+
+	/**
 	 * Renders page with article edit form
 	 * @param int|null $id article id to edit
 	 */
 	function write(EM $em, int $id = null) {
+		if (false === $this->isGranted("IS_AUTHENTICATED_FULLY")) {
+			return $this->redirectToRoute("blog_list");
+		}
+
 		$entity = $id ? $em->find(Article::class, $id) : new Article;
 		$categories = $em->getRepository(Category::class)->findAll();
-		return $this->render("article/form.html.twig", compact("entity", "categories"));
+		$tags = $entity->tags ? $entity->tags->getValues() : [];
+		$tags = $em->getRepository(Tag::class)->tag_string($tags);
+
+		return $this->render("article/form.html.twig", compact("entity", "categories", "tags"));
 	}
 
 	/**
@@ -37,12 +51,24 @@ class ArticleController extends Controller {
 			$this->redirectToRoute("blog_list");
 		}
 
+		if (false === $this->isGranted("IS_AUTHENTICATED_FULLY")) {
+			return $this->redirectToRoute("blog_list");
+		}
+
 		$tag_repo = $em->getRepository(Tag::class);
 		$tags = $tag_repo->add_tags($request->get("tags"));
 
-		// $entity = $id ? $em->find(Article::class, $id) : new Article;
-		// $entity->category = $em->find(Category::class, $request->get("category"));
-		// $entity->user = 
+		$entity = $id ? $em->find(Article::class, $id) : new Article;
+		$entity->category = $em->find(Category::class, $request->get("category"));
+		$entity->content = $request->get("content");
+		$entity->title = $request->get("title");
+		$entity->author = $this->getUser();
+		$entity->tags = $tags;
+
+		$em->persist($entity);
+		$em->flush();
+
+		return $this->redirectToRoute("blog_list");
 	}
 
 }
