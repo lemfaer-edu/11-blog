@@ -96,6 +96,7 @@
 							action="{{ url("comment_write_submit", { article: entity.id }) }}"
 							method="POST">
 
+							<input type="hidden" name="csrf_token" value="{{ csrf_token("comment-save") }}" />
 							<div class="form-row  mb-15px">
 								<div class="form-group col-md-12">
 									<textarea
