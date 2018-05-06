@@ -1,6 +1,7 @@
 App\Entity\Article:
   type: entity
   table: article
+  repositoryClass: App\Repository\ArticleRepository
 
   id:
     id:

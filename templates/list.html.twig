@@ -1,0 +1,63 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	Main page
+{% endblock %}
+
+{% block javascripts %}
+	<script nonce="{{ csp_nonce }}" src="https://cdnjs.cloudflare.com/ajax/libs/bricks.js/1.8.0/bricks.min.js"></script>
+{% endblock %}
+
+{% block content %}
+	<div class="blog_posts stander_blog one_colo_stander_blog">
+		<div class="row">
+			{% for entity in entities %}
+				<article data-id="">
+					<div class="post_img">
+						<img src="{{ img[entity.id] }}">
+					</div>
+					<h5 class="post_title">
+						<a href="{{ url("article_view", { id: entity.id }) }}">
+							{{ entity.title }}
+						</a>
+					</h5>
+					<div class="post_meta_top">
+						<span class="post_meta_category">
+							<a href="{{ url("blog_list", { category: entity.category.name }) }}">
+								{{ entity.category.name }}
+							</a>
+						</span>
+						<span class="post_meta_author">
+							{{ entity.author.public }}
+						</span>
+					</div>
+					<div class="post_content">
+						<p>{{ desc[entity.id] }}</p>
+					</div>
+				</article>
+			{% endfor %}
+		</div>
+	</div>
+	<nav class="pagination_holder">
+		<ul class="pagination circle-pagination mb-80px">
+
+			<li class="page-item active">
+				<a class="page-link" href="https://www.energeticthemes.com/templates/umda/home-19.html#">1</a>
+			</li>
+			<li class="page-item">
+				<a class="page-link" href="https://www.energeticthemes.com/templates/umda/home-19.html#">2</a>
+			</li>
+			<li class="page-item">
+				<a class="page-link" href="https://www.energeticthemes.com/templates/umda/home-19.html#">3</a>
+			</li>
+			<li class="page-item">
+				<a class="page-link" href="https://www.energeticthemes.com/templates/umda/home-19.html#" aria-label="Next">
+					<span>
+						&gt;
+					</span>
+					<span class="sr-only">Next</span>
+				</a>
+			</li>
+		</ul>
+	</nav>
+{% endblock %}
