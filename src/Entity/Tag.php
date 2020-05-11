@@ -2,10 +2,9 @@
 
 namespace App\Entity;
 
-class Tag {
-
-	public $id;
-	public $name;
-	public $articles;
-
+class Tag
+{
+    public $id;
+    public $name;
+    public $articles;
 }

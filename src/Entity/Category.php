@@ -2,10 +2,9 @@
 
 namespace App\Entity;
 
-class Category {
-
-	public $id;
-	public $name;
-	public $articles;
-
+class Category
+{
+    public $id;
+    public $name;
+    public $articles;
 }

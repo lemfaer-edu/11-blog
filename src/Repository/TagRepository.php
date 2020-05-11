@@ -6,88 +6,101 @@ use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class TagRepository extends ServiceEntityRepository {
+class TagRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Tag::class);
+    }
 
-	function __construct(ManagerRegistry $registry) {
-		parent::__construct($registry, Tag::class);
-	}
+    /**
+     * Parses tags string
+     *
+     * @param string $tag_string string of tags, separated by `,`
+     * @return array
+     */
+    public function tags($tag_string)
+    {
+        $regex = "/((?![\w,-_\040]).)+/";
+        $tag_string = preg_replace($regex, "", $tag_string);
+        $tag_string = mb_strtolower($tag_string);
+        $tags = explode(",", $tag_string);
+        $tags = array_map("trim", $tags);
+        $tags = array_unique($tags);
 
-	/**
-	 * Parses tags string
-	 * @param string $tag_string string of tags, separated by `,`
-	 * @return array
-	 */
-	function tags($tag_string) {
-		$regex = "/((?![\w,-_\040]).)+/";
-		$tag_string = preg_replace($regex, "", $tag_string);
-		$tag_string = mb_strtolower($tag_string);
-		$tags = explode(",", $tag_string);
-		$tags = array_map("trim", $tags);
-		$tags = array_unique($tags);
-		return $tags;
-	}
+        return $tags;
+    }
 
-	/**
-	 * Creates tag string from tag objects
-	 * @param Tag[] $tag_objects array of tag entities
-	 * @return string
-	 */
-	function tag_string($tag_objects) {
-		$tag_names = array_column($tag_objects ?: [], "name");
-		$tag_string = implode(", ", $tag_names);
-		return $tag_string;
-	}
+    /**
+     * Creates tag string from tag objects
+     *
+     * @param Tag[] $tag_objects array of tag entities
+     *
+     * @return string
+     */
+    public function tag_string($tag_objects)
+    {
+        $tag_names = array_column($tag_objects ?: [], "name");
+        $tag_string = implode(", ", $tag_names);
 
-	/**
-	 * Creates tags in db if they not exists
-	 * @param string $tag_string string of tags, separated by `,`
-	 * @param int $limit limit of tags to add/return as result
-	 * @return array
-	 */
-	function add_tags($tag_string, $limit = 5) {
-		$tags = $this->tags($tag_string);
-		$entities = $this->get_tags($tag_string, $limit);
-		$em = $this->getEntityManager();
+        return $tag_string;
+    }
 
-		if (count($entities) < $limit) {
-			$exists = array_column($entities, "name");
-			$left = $limit - count($exists);
-			$nexists = array_diff($tags, $exists);
-			$nexists = array_values($nexists);
-			$nexists = array_slice($nexists, 0, $left);
+    /**
+     * Creates tags in db if they not exists
+     *
+     * @param string $tag_string string of tags, separated by `,`
+     * @param int $limit limit of tags to add/return as result
+     *
+     * @return array
+     */
+    public function add_tags($tag_string, $limit = 5)
+    {
+        $tags = $this->tags($tag_string);
+        $entities = $this->get_tags($tag_string, $limit);
+        $em = $this->getEntityManager();
 
-			foreach ($nexists as $name) {
-				$entity = new Tag;
-				$entity->name = $name;
-				$entities[] = $entity;
-				$em->persist($entity);
-			}
+        if (count($entities) < $limit) {
+            $exists = array_column($entities, "name");
+            $left = $limit - count($exists);
+            $nexists = array_diff($tags, $exists);
+            $nexists = array_values($nexists);
+            $nexists = array_slice($nexists, 0, $left);
 
-			$em->flush();
-		}
+            foreach ($nexists as $name) {
+                $entity = new Tag;
+                $entity->name = $name;
+                $entities[] = $entity;
+                $em->persist($entity);
+            }
 
-		return $entities;
-	}
+            $em->flush();
+        }
 
-	/**
-	 * Gets tags from db by tag string
-	 * @param string $tag_string string of tags, separated by `,`
-	 * @param int $limit limit of tags to load
-	 * @param int $offset offset count
-	 * @return array
-	 */
-	function get_tags($tag_string, $limit = 5, $offset = 0) {
-		$tags = $this->tags($tag_string);
+        return $entities;
+    }
 
-		$query = $this
-			->createQueryBuilder("t")
-			->where("t.name IN (:tags)")
-			->setFirstResult($offset)
-			->setMaxResults($limit)
-			->setParameter("tags", $tags)
-			->getQuery();
+    /**
+     * Gets tags from db by tag string
+     *
+     * @param string $tag_string string of tags, separated by `,`
+     * @param int $limit limit of tags to load
+     * @param int $offset offset count
+     *
+     * @return array
+     */
+    public function get_tags($tag_string, $limit = 5, $offset = 0)
+    {
+        $tags = $this->tags($tag_string);
 
-		return $query->execute();
-	}
+        $query = $this
+            ->createQueryBuilder("t")
+            ->where("t.name IN (:tags)")
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->setParameter("tags", $tags)
+            ->getQuery();
 
+        return $query->execute();
+    }
 }
